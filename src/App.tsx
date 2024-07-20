@@ -10,6 +10,13 @@ interface ladyBugStateIfc {
   orientation: Direction;
 }
 
+const keyMappings = {
+  ArrowUp: { orientation: Direction.up, dx: -STEP_SIZE, dy: 0 },
+  ArrowDown: { orientation: Direction.down, dx: +STEP_SIZE, dy: 0 },
+  ArrowLeft: { orientation: Direction.left, dx: 0, dy: -STEP_SIZE },
+  ArrowRight: { orientation: Direction.right, dx: 0, dy: +STEP_SIZE },
+};
+
 export const App: React.FC = () => {
   const [ladybugState, setLadybugState] = useState<ladyBugStateIfc>({
     posX: 800,
@@ -17,32 +24,20 @@ export const App: React.FC = () => {
     orientation: Direction.right,
   });
 
-  const handleKeyUp = ({ code }: React.KeyboardEvent<HTMLDivElement>) => {
-    if (code === 'ArrowUp') {
-      setLadybugState((oldLadybugState) => ({
-        ...oldLadybugState,
-        orientation: Direction.up,
-        posX: oldLadybugState.posX - STEP_SIZE,
-      }));
-    } else if (code === 'ArrowLeft') {
-      setLadybugState((oldLadybugState) => ({
-        ...oldLadybugState,
-        orientation: Direction.left,
-        posY: oldLadybugState.posY - STEP_SIZE,
-      }));
-    } else if (code === 'ArrowRight') {
-      setLadybugState((oldLadybugState) => ({
-        ...oldLadybugState,
-        orientation: Direction.right,
-        posY: oldLadybugState.posY + STEP_SIZE,
-      }));
-    } else if (code === 'ArrowDown') {
-      setLadybugState((oldLadybugState) => ({
-        ...oldLadybugState,
-        orientation: Direction.down,
-        posX: oldLadybugState.posX + STEP_SIZE,
-      }));
-    }
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    // Extract code from the event
+    const code = event.code;
+
+    // Lookup the mapping based on the key code
+    // // But in order for TS to recognize that its value should now sort of belong to keyMappings, type assertion needs to be used
+    const mapping = keyMappings[code as keyof typeof keyMappings];
+
+    setLadybugState((oldLadybugState) => ({
+      ...oldLadybugState,
+      orientation: mapping.orientation,
+      posX: oldLadybugState.posX + mapping.dx,
+      posY: oldLadybugState.posY + mapping.dy,
+    }));
   };
 
   return (
