@@ -19,8 +19,8 @@ const keyMappings = {
 
 export const App: React.FC = () => {
   const [ladybugState, setLadybugState] = useState<ladyBugStateIfc>({
-    posX: 800,
-    posY: 300,
+    posX: 100,
+    posY: 100,
     orientation: Direction.right,
   });
 
