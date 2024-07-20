@@ -4,35 +4,55 @@ import { Direction } from './components/Ladybug';
 
 const STEP_SIZE = 25;
 
-export const App: React.FC = () => {
-  const [posX, setPosX] = useState<number>(100);
-  const [posY, setPosY] = useState<number>(100);
-  const [orientation, setOrientation] = useState<Direction>(Direction.right);
+interface ladyBugStateIfc {
+  posX: number;
+  posY: number;
+  orientation: Direction;
+}
 
-  const handleKeyUp = ({ code }:React.KeyboardEvent<HTMLDivElement>) => {
+export const App: React.FC = () => {
+  const [ladybugState, setLadybugState] = useState<ladyBugStateIfc>({
+    posX: 800,
+    posY: 300,
+    orientation: Direction.right,
+  });
+
+  const handleKeyUp = ({ code }: React.KeyboardEvent<HTMLDivElement>) => {
     if (code === 'ArrowUp') {
-      setOrientation(Direction.up);
-      setPosX(posX - STEP_SIZE);
+      setLadybugState((oldLadybugState) => ({
+        ...oldLadybugState,
+        orientation: Direction.up,
+        posX: oldLadybugState.posX - STEP_SIZE,
+      }));
     } else if (code === 'ArrowLeft') {
-      setOrientation(Direction.left);
-      setPosY(posY - STEP_SIZE);
+      setLadybugState((oldLadybugState) => ({
+        ...oldLadybugState,
+        orientation: Direction.left,
+        posY: oldLadybugState.posY - STEP_SIZE,
+      }));
     } else if (code === 'ArrowRight') {
-      setOrientation(Direction.right);
-      setPosY(posY + STEP_SIZE);
+      setLadybugState((oldLadybugState) => ({
+        ...oldLadybugState,
+        orientation: Direction.right,
+        posY: oldLadybugState.posY + STEP_SIZE,
+      }));
     } else if (code === 'ArrowDown') {
-      setOrientation(Direction.down);
-      setPosX(posX + STEP_SIZE);
+      setLadybugState((oldLadybugState) => ({
+        ...oldLadybugState,
+        orientation: Direction.down,
+        posX: oldLadybugState.posX + STEP_SIZE,
+      }));
     }
   };
 
   return (
-    <div
-      tabIndex={-1}
-      className="field"
-      onKeyDown={handleKeyUp}
-    >
+    <div tabIndex={-1} className="field" onKeyDown={handleKeyUp}>
       <header>Click anywhere to start the game</header>
-      <Ladybug posX={posX} posY={posY} orientation={orientation} />
+      <Ladybug
+        posX={ladybugState.posX}
+        posY={ladybugState.posY}
+        orientation={ladybugState.orientation}
+      />
     </div>
   );
 };
