@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Ladybug from './components/Ladybug';
 import { Direction } from './components/Ladybug';
 
@@ -24,12 +24,9 @@ export const App: React.FC = () => {
     orientation: Direction.right,
   });
 
-  const handleKeyUp = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    // Extract code from the event
+  const handleKeyUp = (event: KeyboardEvent) => {
     const code = event.code;
 
-    // Lookup the mapping based on the key code
-    // // But in order for TS to recognize that its value should now sort of belong to keyMappings, type assertion needs to be used
     const mapping = keyMappings[code as keyof typeof keyMappings];
 
     setLadybugState((oldLadybugState) => ({
@@ -40,9 +37,14 @@ export const App: React.FC = () => {
     }));
   };
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyUp);
+    return () => document.removeEventListener('keydown', handleKeyUp);
+  }, [ladybugState]);
+
   return (
-    <div tabIndex={-1} className="field" onKeyDown={handleKeyUp}>
-      <header>Click anywhere to start the game</header>
+    <div tabIndex={-1} className="field">
+      <header>Use arrows to make the ladybug go somewhere</header>
       <Ladybug
         posX={ladybugState.posX}
         posY={ladybugState.posY}
