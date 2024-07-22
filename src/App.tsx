@@ -40,7 +40,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     document.addEventListener('keydown', handleKeyUp);
     return () => document.removeEventListener('keydown', handleKeyUp);
-  }, [ladybugState]);
+  }, []);
 
   return (
     <div tabIndex={-1} className="field">
